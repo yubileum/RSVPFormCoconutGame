@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preload" as="image" href="img/logo.gif">
+    <style>
+        @font-face {
+            font-family: 'Gotham';
+            src: url('fonts/Gotham.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Gotham', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* body {
+            background-color: #000000;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(146, 184, 71, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(65, 193, 207, 0.2) 0%, transparent 50%);
+            overflow-x: hidden;
+        } */
+
+        .top-logos {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-logos img {
+            height: 40px; /* ukuran proporsional kecil */
+            width: auto;
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            /* background: url('img/background.png') no-repeat center center fixed; */
+            background-size: cover;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 550px;
+            padding: 2rem;
+            border-radius: 8px;
+            background: url('img/background.png') no-repeat center center;
+            background-size: cover;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(65, 193, 207, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #92b847, #41c1cf);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            max-width: 100%;
+            height: auto;
+            animation: glitch 2.5s infinite;
+        }
+        
+        .logo svg {
+            width: 120px;
+            height: 120px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #c5c5c5;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #41c1cf;
+            box-shadow: 0 0 0 2px rgba(65, 193, 207, 0.2);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .radio-option input {
+            width: auto;
+            margin-right: 8px;
+            accent-color: #41c1cf;
+        }
+        
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #92b847, #41c1cf);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 193, 207, 0.4);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(30deg);
+            transition: all 0.5s;
+        }
+        
+        button:hover::after {
+            transform: rotate(30deg) translate(150%, -150%);
+        }
+        
+        .shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.2;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background-color: #92b847;
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background-color: #41c1cf;
+            right: 15%;
+            bottom: 20%;
+            animation-delay: -5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            background-color: #dfc538;
+            left: 30%;
+            bottom: 10%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-40px) scale(1.1);
+            }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(2px, 2px); }
+            100% { transform: translate(0); }
+        }
+
+        .logo::before, .logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('img/logo.gif') no-repeat center;
+            background-size: contain;
+            opacity: 0.7;
+            animation: glitchEffect 2.5s infinite;
+        }
+
+        .logo::after {
+            animation-delay: -1.25s;
+            opacity: 0.5;
+        }
+
+        #introContainer {
+            text-align: center;
+        }
+
+        @keyframes glitchEffect {
+            0% { clip: rect(2px, 9999px, 44px, 0); transform: translate(-2px, 0); }
+            20% { clip: rect(30px, 9999px, 70px, 0); transform: translate(2px, 2px); }
+            40% { clip: rect(10px, 9999px, 50px, 0); transform: translate(-2px, -2px); }
+            60% { clip: rect(25px, 9999px, 75px, 0); transform: translate(2px, -2px); }
+            80% { clip: rect(5px, 9999px, 55px, 0); transform: translate(-2px, 2px); }
+            100% { clip: rect(15px, 9999px, 65px, 0); transform: translate(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Squid Game elements */
+        .squid-symbols {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .symbol {
+            width: 55px;
+            height: 55px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .symbol img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .symbol img:hover {
+            transform: scale(1.1);
+        }
+        
+        .symbol svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .countdown {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #41c1cf;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(65, 193, 207, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        
+        .field-icon {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            color: #41c1cf;
+        }
+        
+        .field-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-logo img {
+            width: 22vw;        /* proporsional terhadap lebar layar */
+            max-width: 180px;   /* maksimal agar tidak terlalu besar */
+            min-width: 80px;    /* minimal untuk HP kecil */
+            height: auto;
+            animation: glitch 2s infinite;
+        }
+
+
+        
+        /* Logo Glow Animation */
+        @keyframes logoGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 5px rgba(146, 184, 71, 0.7));
+            }
+            50% {
+                filter: drop-shadow(0 0 15px rgba(65, 193, 207, 0.9));
+            }
+        }
+        
+        .logo svg {
+            animation: logoGlow 3s infinite ease-in-out;
+        }
+        
+        /* Confirmation Page */
+        .confirmation {
+            text-align: center;
+            display: none;
+        }
+        
+        .confirmation p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .confirmation .social {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .confirmation .social a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .confirmation .social a:hover {
+            color: #41c1cf;
+        }
+        
+        .coconut-logo {
+            margin: 2rem 0;
+        }
+        
+        .coconut-logo svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Tambahkan border lebih jelas */
+        input, select {
+            border: 1px solid rgba(255, 255, 255, 0.4); /* sebelumnya 0.1 */
+        }
+
+        /* Hilangkan increment dari input number */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        /* Opening Page */
+        #openingPage {
+            text-align: center;
+        }
+
+        #openingPage .welcome-text {
+            font-size: 2.6rem;  /* ukuran font lebih besar */
+            margin-bottom: 1.5rem;
+        }
+
+        #openingPage .invitation-text,
+        #openingPage .secure-text {
+            font-size: 1.4rem; /* font diperbesar agar lebih jelas */
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        #openingPage .logo img {
+            margin: 20px auto;
+        }
+
+        #openingPage button {
+            font-size: 1.2rem;
+            padding: 14px 28px;
+            margin-top: 15px;
+        }
+
+        /* disclaimer page */
+        /* Shake animation */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+            75% { transform: translateX(-3px); }
+            100% { transform: translateX(0); }
+        }
+
+        #checkboxWrapper.error {
+            animation: shake 0.3s;
+            border: 2px solid red;
+            border-radius: 4px;
+            padding: 3px;
+        }
+
+        input[type="checkbox"].error {
+            outline: 2px solid red !important;
+            animation: shake 0.3s;
+            border-radius: 4px;
+        }
+
+        #confirmationPage {
+            border: 2px solid #41c1cf;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .map-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .responsive-map {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Thank You Page */
+        .top-logos {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-logos img {
+            height: 40px; /* ukuran proporsional kecil */
+            width: auto;
+        }
+
+        #finalThankYouPage {
+            width: 100vw;
+            height: 100vh;
+            aspect-ratio: 9 / 16;
+            padding: 3rem 2rem;
+            box-sizing: border-box;
+            overflow: hidden;
+            background: url('img/background.png') no-repeat center center;
+            background-size: cover;
+            color: white;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            text-align: center;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* @media screen and (max-width: 1080px) {
+            #finalThankYouPage {
+                transform: scale(0.9);
+                transform-origin: top;
+            }
+        } */
+
+        #finalThankYouPage h1 {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+        }
+
+        #finalThankYouPage img.logo-main {
+            width: 60%;
+            max-width: 200px;
+            margin: 20px auto;
+            animation: pulse 2s infinite;
+        }
+
+        #finalThankYouPage h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #finalThankYouPage p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        #finalThankYouPage .share-instruction {
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-screen" id="loadingScreen" style="display: none;">
+        <div class="loading-logo">
+          <img src="img/logo.gif" alt="Loading..." />
+        </div>
+    </div>
+      
+    <div class="shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="container visible" id="openingPage">
+        <div class="top-logos">
+            <img src="img/OMK-logo.png" alt="OMK Logo" />
+            <img src="img/ICU-logo.png" alt="ICU Logo" />
+        </div>
+
+        <h1><b>Welcome, [Name]</b></h1>
+        <p>This is your personal invitation to step into the <b>most thrilling, immersive, and high-stakes game experience</b> of the year:</p>
+        <div class="logo">
+            <img src="img/logo.gif" alt="Coconut Game Logo">
+        </div>  
+        <p><b>Secure your spot before invitations are revoked.<br>Limited slots remain.</b></p>
+        <button id="showIntro" href="https://forms.gle/8iJtWiaSTWh8rwgo8">RSVP Now</button>
+    </div>
+
+    <!-- disclaimer page -->
+    <div id="confirmationPage" class="container" style="display: none; text-align: center;">
+        <h1>Disclaimer</h1>
+        <p>Before confirming your participation,<br>please read through all the information below:</p>
+    
+        <div style="text-align: left; margin-top: 20px;">
+            <p><b>Date:</b> Saturday, 24th May 2025</p>
+            <p><b>Coconut Game:</b> 07.30 - 15.00</p>
+            <p><b>Misa OMK:</b> 17.00</p>
+            <p><b>Ivory Market:</b> 18.30</p>
+            <p><b>Unity Night:</b> 18.30</p>
+            <br>
+            <p><b>Location:</b> Sekolah St. Yakobus</p>
+    
+            <ol style="margin-left: 20px; margin-top: 15px;">
+                <li>Biaya pendaftaran 15k (sudah termasuk makan siang, tiket masuk Unity Night & voucher Ivory Market sebesar 50k)</li>
+                <li>Pakaian: <b>WAJIB</b> kaos putih polos tanpa motif dan siap kotor.</li>
+                <li><b>WAJIB</b> DATANG TEPAT WAKTU.</li>
+                <li>Membawa botol minum (Panitia hanya menyiapkan air minum galon).</li>
+                <li><b>DILARANG</b> membawa senjata tajam dan merokok (baik elektrik maupun konvensional).</li>
+            </ol>
+        </div>
+    
+        <div style="margin-top: 30px; text-align: left;">
+            <div id="agreementWrapper" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                <div id="checkboxWrapper" style="display: inline-block;">
+                    <input type="checkbox" id="agreementCheckbox" style="width: 20px; height: 20px; margin-top: 5px;">
+                </div>                  
+              <span>
+                I have read all the information above thoroughly, I agree with all the points above.<br>
+                <i>Saya telah membaca seluruh informasi diatas dengan teliti, Saya setuju untuk mengikuti semua ketentuan diatas.</i>
+              </span>
+            </div>
+        </div>          
+    
+        <button id="nextButton" disabled style="margin-top: 30px; padding: 12px 24px; font-size: 1.2rem;">Next</button>
+    </div>    
+
+    <div class="container" id="formContainer" style="display:none;">
+        
+        <div class="logo" id="logoCoconut">
+            <img src="img/logo.gif" alt="Coconut Game Logo">
+        </div>
+        
+        <h1 id = "h1Coconut">Player Information</h1>
+        
+        <div class="squid-symbols" id="symbolsCoconut">
+            <div class="symbol">
+                <img src="img/segitiga.png" alt="">
+            </div>
+            <div class="symbol">
+                <img src="img/salib.png" alt="">
+            </div>
+            <div class="symbol">
+                <img src="img/question.png" alt="">
+            </div>
+        </div>
+
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" required readonly>
+            </div>
+        
+            <div class="form-group">
+                <label for="tanggalLahir">Tanggal Lahir</label>
+                <input type="text" id="tanggalLahir" name="tanggalLahir" required placeholder="dd/mm/yyyy" maxlength="10">
+            </div>                      
+
+            <div class="map-container">
+                <img src="img/map.jpeg" alt="Map Wilayah" class="responsive-map" />
+            </div>            
+        
+            <div class="form-group">
+                <label for="domisili">Domisili Wilayah</label>
+                <input type="text" id="domisili" name="domisili" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="alergi">Alergi / Penyakit Bawaan (Tulis "-" apabila tidak ada)</label>
+                <input type="text" id="alergi" name="alergi" required>
+            </div>
+        
+            <!-- Checkbox Konfirmasi -->
+            <div style="margin-top: 30px; text-align: left;">
+                <div id="finalCheckboxWrapper" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="finalAgreement" style="width: 20px; height: 20px; margin-top: 5px;">
+                    <span>
+                        I have filled all the information honest and carefully.<br>
+                        <i>Saya telah mengisi seluruh informasi di atas dengan jujur dan teliti.</i>
+                    </span>
+                </div>
+            </div>
+        
+            <button id="submitFinalButton" disabled style="margin-top: 30px; padding: 12px 24px; font-size: 1.2rem;">Next</button>
+        </form>        
+
+        <!-- PAYMENT PAGE -->
+        <div id="paymentPage" class="container" style="display:none;">
+            <form id="paymentForm" enctype="multipart/form-data">
+                <h1>CLAIM YOUR GEAR</h1>
+
+                <div class="form-group">
+                    <label>Item dibawah ini tidak wajib dibeli, silakan centang satu item yang ingin dibeli.</label>
+                    <div id="sizeChartWrapper" style="text-align: center; margin-bottom: 20px;">
+                        <img src="img/size-chart.jpeg" alt="Size Chart" style="max-width: 100%; height: auto;">
+                    </div>    
+                    <div id="sizeChartWrapper" style="text-align: center; margin-bottom: 20px;">
+                        <img src="img/kalung.jpeg" alt="Size Chart" style="max-width: 100%; height: auto;">
+                    </div>  
+                    <label for="paymentOption">Pilih Paket:</label>
+                    <div class="radio-group" id="paymentOptions" style="flex-direction: column; gap: 15px;">
+                        <label class="radio-option">
+                            <input type="radio" name="payment" value="1" required>
+                            <span><span style="color:#92b847;">Coconut Game</span> saja – Rp. 15.000</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="payment" value="2">
+                            <span><span style="color:#92b847;">Coconut Game</span> + <span style="color:#dfc538;">Kaos</span> – Rp. 55.000</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="payment" value="3">
+                            <span><span style="color:#92b847;">Coconut Game</span> + <span style="color:#41c1cf;">Kalung</span> – Rp. 50.000</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="payment" value="4">
+                            <span><span style="color:#92b847;">Coconut Game</span> + <span style="color:#dfc538;">Kaos</span> + <span style="color:#41c1cf;">Kalung</span> – Rp. 90.000</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="sizeGroup" style="display:none;">                 
+                    <label for="size">Ukuran Kaos:</label>
+                    <select id="size" name="size">
+                        <option value="" disabled selected>Pilih ukuran</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="buktiBayar">Upload Bukti Pembayaran:</label><br>
+                    <input type="file" id="buktiBayar" name="buktiBayar" accept=".jpg,.jpeg,.png" required />
+                </div>
+                
+
+                <button type="submit" id="submitButton" style="margin-top: 30px;">Submit Application</button>
+            </form>
+        </div>
+
+        <!-- Thank You Page -->
+        <div id="thankYouWrapper" style="width: 100%; display: flex; justify-content: center; align-items: center;">
+            <div id="finalThankYouPage" style="display: none;">
+                <div class="top-logos">
+                    <img src="img/OMK-logo.png" alt="OMK Logo" />
+                    <img src="img/ICU-logo.png" alt="ICU Logo" />
+                </div>
+                <h1>Thank you,<br><span id="thankYouName">Player</span>.</h1>
+                <p>THE COCONUT GAME will test more than just your strength—it will challenge your mind, instincts, and will to win.</p>
+                <p>Are you ready? See you on May 24th.</p>
+                <img class="logo-main" src="img/logo.png" alt="Coconut Game Logo">
+                <h2>COME PLAY WITH ME</h2>
+                <div style="line-height: 2;">
+                    ............................................<br>
+                    ............................................<br>
+                    ............................................
+                </div>
+                <p class="share-instruction">
+                    Screenshot this page and share it on your story with<br>
+                    <b>#IvoryCoconutUnity #CoconutGame</b><br>
+                    @omkstyakobus @omk.kimtaegon
+                </p>
+            </div>            
+        </div>
+        
+        <!-- <form id="registrationForm">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" required>
+                <div class="field-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="gender" value="pria" required> Pria
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="gender" value="wanita"> Wanita
+                    </label>
+                </div>
+                <div class="field-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="usia">Usia</label>
+                <input type="number" id="usia" name="usia" min="1" max="100" required>
+                <div class="field-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="nomorWA">Nomor WA</label>
+                <input type="number" id="nomorWA" name="nomorWA" required>
+                <div class="field-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff4d81" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="agama">Agama</label>
+                <select id="agama" name="agama" required>
+                    <option value="" disabled selected>Pilih...</option>
+                    <option value="katolik">Katolik</option>
+                    <option value="protestan">Protestan</option>
+                    <option value="hindu">Hindu</option>
+                    <option value="buddha">Buddha</option>
+                    <option value="islam">Islam</option>
+                    <option value="konghucu">Konghucu</option>
+                </select>
+                <div class="field-icon">
+                    <i class="fa-solid fa-hands-praying"></i>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="paroki">Paroki</label>
+                <select id="paroki" name="paroki" required>
+                    <option value="" disabled selected>Pilih...</option>
+                    <option value="kelapa-gading">Paroki Kelapa Gading</option>
+                    <option value="area-kelapa-gading">Domisili Kelapa Gading, Non Paroki Kelapa Gading</option>
+                    <option value="non-kelapa-gading">Non Kelapa Gading</option>
+                </select>
+                <div class="field-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </div>
+            </div>
+            
+            <button type="submit">Apply Now</button>
+        </form> -->
+    </div>
+    
+    <!-- Confirmation Page -->
+    <!-- <div class="container confirmation" id="confirmationContainer">
+        <h1>THANK YOU, APPLICANTS.</h1>
+    
+        <p>Your application has been received.<br>
+        Our soldiers are now reviewing your submission—if chosen, you’ll receive a personal invitation to join the</p>
+    
+        <div class="logo">
+            <img src="img/logo.gif" alt="Coconut Game Logo" />
+        </div>
+    
+        <p>Stay sharp.<br>
+        Follow <a href="https://www.instagram.com/omkstyakobus/" target="_blank">@omkstyakobus</a> and 
+        <a href="https://www.instagram.com/omk.kimtaegon/" target="_blank">@omk.kimtaegon</a> for updates.<br>
+        The selection process is underway.</p>
+    </div>     -->
+
+    <script>
+        const endpoint = 'https://script.google.com/macros/s/AKfycbyYnP4HoQ6aMxHRvsj8D4eldYC__fbeZ08p-fbuUrUc8oWeTvX0pwY46Y5qknKm94Qb/exec';
+      
+        document.addEventListener('DOMContentLoaded', () => {
+          const loadingScreen = document.getElementById('loadingScreen');
+          const tanggalInput = document.getElementById('tanggalLahir');
+          const nextButton = document.getElementById('nextButton');
+          const agreementCheckbox = document.getElementById('agreementCheckbox');
+          const finalAgreement = document.getElementById('finalAgreement');
+          const submitFinalButton = document.getElementById('submitFinalButton');
+      
+          // Format tanggal otomatis
+          if (tanggalInput) {
+            tanggalInput.addEventListener('input', function (e) {
+              let value = e.target.value.replace(/\D/g, '');
+              if (value.length > 2 && value.length <= 4) {
+                value = value.slice(0, 2) + '/' + value.slice(2);
+              } else if (value.length > 4) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4, 8);
+              }
+              e.target.value = value;
+            });
+          }
+      
+          // Enable tombol NEXT saat checkbox dicentang
+          if (agreementCheckbox && nextButton) {
+            nextButton.disabled = true;
+            agreementCheckbox.addEventListener('change', () => {
+              nextButton.disabled = !agreementCheckbox.checked;
+            });
+          }
+      
+          // Enable tombol SUBMIT FINAL saat checkbox dicentang
+          if (finalAgreement && submitFinalButton) {
+            submitFinalButton.disabled = true;
+            finalAgreement.addEventListener('change', () => {
+              submitFinalButton.disabled = !finalAgreement.checked;
+            });
+          }
+      
+          // Ambil nama dari URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const incomingName = urlParams.get("name");
+          if (!incomingName) {
+            alert("Link tidak valid. Nama tidak tersedia.");
+            document.body.innerHTML = "<h2 style='text-align:center;color:red;'>Unauthorized Access</h2>";
+          } else {
+            document.querySelector("#openingPage h1").innerHTML = `<b>WELCOME, ${incomingName.toUpperCase()}</b>`;
+            document.getElementById('nama').value = incomingName;
+          }
+      
+        //   document.getElementById('showIntro')?.addEventListener('click', () => navigate('openingPage', 'confirmationPage'));
+        //   nextButton?.addEventListener('click', function(e) {
+        //     e.preventDefault();
+        //     navigate('confirmationPage', 'formContainer');
+        //   });
+        //   submitFinalButton?.addEventListener('click', function(e) {
+        //     e.preventDefault();
+        //     navigate('registrationForm', 'paymentPage');
+        //   });
+
+        document.getElementById('showIntro').addEventListener('click', function() {
+            window.open("https://docs.google.com/forms/d/e/1FAIpQLSf67rU_z_6klfAGNk7Jwsxhb82sIqq_xpCKy1bl2jEGvSmgWg/viewform?usp=dialog", "_blank");
+        });
+
+      
+        const sizeGroup = document.getElementById('sizeGroup');
+        const sizeChart = document.getElementById('sizeChartWrapper');
+
+        document.querySelectorAll('input[name="payment"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const showSize = (this.value === '2' || this.value === '4');
+            sizeGroup.style.display = showSize ? 'block' : 'none';
+            sizeChart.style.display = showSize ? 'block' : 'none';
+        });
+        });
+      
+          const paymentForm = document.getElementById('paymentForm');
+          paymentForm?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+      
+            const nama = document.getElementById('nama').value;
+            const tanggalLahir = document.getElementById('tanggalLahir').value;
+            const domisili = document.getElementById('domisili').value;
+            const alergi = document.getElementById('alergi').value;
+            const payment = document.querySelector('input[name="payment"]:checked');
+            const size = document.getElementById('size');
+            const buktiBayarInput = document.getElementById('buktiBayar');
+            const file = buktiBayarInput.files[0];
+      
+            if (!payment) return alert('Pilih paket pembayaran!');
+            if ((payment.value === '2' || payment.value === '4') && !size.value) return alert('Pilih ukuran kaos!');
+            if (!file) return alert('Upload bukti pembayaran!');
+            if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) return alert('Format file harus JPG/PNG!');
+            if (file.size > 3 * 1024 * 1024) return alert('Ukuran maksimal 3MB!');
+      
+            if (loadingScreen) loadingScreen.style.display = 'flex';
+      
+            const reader = new FileReader();
+            reader.onload = function () {
+              const base64 = reader.result.split(',')[1];
+      
+              const payload = {
+                nama: nama,
+                tanggalLahir: tanggalLahir,
+                domisili: domisili,
+                alergi: alergi,
+                payment: payment.value,
+                size: size.value || '',
+                buktiBayar: base64,
+                mimeType: file.type,
+                filename: file.name
+              };
+      
+              const formData = new FormData();
+              formData.append('payload', JSON.stringify(payload));
+      
+            for (let pair of formData.entries()) {
+                console.log(`${pair[0]}: ${pair[1]}`);
+            }
+            
+            fetch(endpoint, {
+                method: 'POST',
+                body: formData,
+                
+            }).then(response => {
+                console.log("✅ Sukses kirim data ke Apps Script");
+                return response.json();
+            }).then(data => {
+                console.log("✅ Respon dari Apps Script:", data);
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('confirmationContainer').style.display = 'block';
+                document.getElementById('loadingScreen').style.display = 'none';
+            }).catch(error => {
+                console.error("❌ Gagal kirim data:", error);
+                alert('Gagal mengirim data: ' + error.message);
+            });
+      
+              setTimeout(() => {
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                document.getElementById('paymentPage').style.display = 'none';
+                const name = document.getElementById('nama').value;
+                document.getElementById('thankYouName').textContent = name;
+                document.getElementById('finalThankYouPage').style.display = 'block';
+              }, 2000);
+            };
+      
+            reader.readAsDataURL(file);
+          });
+        });
+      
+        function navigate(hideId, showId) {
+          const hideEl = document.getElementById(hideId);
+          const showEl = document.getElementById(showId);
+          if (hideEl && showEl) {
+            hideEl.style.display = 'none';
+            showEl.style.display = 'block';
+          }
+        }
+
+        document.getElementById('submitButton').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Menyembunyikan halaman sebelumnya
+            document.getElementById('paymentPage').style.display = 'none';
+            document.getElementById('logoCoconut').style.display = 'none';
+            document.getElementById('h1Coconut').style.display = 'none';
+            document.getElementById('symbolsCoconut').style.display = 'none';
+
+            //document.getElementsByClassName('logo').style.display = 'none';
+
+            // Menampilkan halaman Thank You
+            document.getElementById('finalThankYouPage').style.display = 'flex';
+
+            // Optional: Mengambil nama dari input sebelumnya dan tampilkan di Thank You page
+            const playerName = document.getElementById('nama').value;
+            document.getElementById('thankYouName').textContent = playerName;
+        });
+    </script>
+      
+      
+      
+      
+        
+
+    <!-- <script>
+        const paymentForm = document.getElementById('paymentForm');
+        const buktiBayar = document.getElementById('buktiBayar');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwW7oPYpO-sNMFChomHT2MiuQHADozBl5uj5JOee6KI2tsMeBbUPkDb14EXSLIp-Tikvg/exec';
+        const validationURL = 'https://script.google.com/macros/s/AKfycbwW7oPYpO-sNMFChomHT2MiuQHADozBl5uj5JOee6KI2tsMeBbUPkDb14EXSLIp-Tikvg/exec'; // Karena kamu pakai satu script untuk submit & validasi
+        const scriptRSVP = 'https://script.google.com/macros/s/AKfycbwW7oPYpO-sNMFChomHT2MiuQHADozBl5uj5JOee6KI2tsMeBbUPkDb14EXSLIp-Tikvg/exec';
+        
+        const form = document.getElementById('registrationForm');
+        const checkbox = document.getElementById('agreementCheckbox');
+        const checkboxWrapper = document.getElementById('checkboxWrapper');
+        const nextButton = document.getElementById('nextButton');
+        const finalCheckbox = document.getElementById('finalAgreement');
+        const finalCheckboxWrapper = document.getElementById('finalCheckboxWrapper');
+        const submitFinalButton = document.getElementById('submitFinalButton');
+        const loadingScreen = document.getElementById('loadingScreen');
+
+        //tanggal lahir
+        document.getElementById('tanggalLahir').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // hanya angka
+            if (value.length > 2 && value.length <= 4)
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            else if (value.length > 4)
+                value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4, 8);
+            e.target.value = value;
+        });
+
+        
+        // --- PREFILL & VALIDASI NAMA DARI URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const incomingName = urlParams.get("name");
+        const welcome = document.querySelector("#openingPage h1");
+        const nameInput = document.getElementById('nama');
+        const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+        
+        if (!incomingName) {
+          alert("Link tidak valid. Nama tidak tersedia.");
+          document.body.innerHTML = "<h2 style='text-align:center;color:red;'>Unauthorized Access</h2>";
+        } else {
+          // Tampilkan nama langsung (prefill cepat)
+          if (welcome) welcome.innerHTML = `<b>WELCOME, ${incomingName.toUpperCase()}</b>`;
+          if (nameInput) {
+            nameInput.value = incomingName;
+            nameInput.readOnly = true;
+          }
+        
+          // Validasi nama jika bukan lokal
+          if (!isLocal) {
+            const apiUrl = validationURL + "?name=" + encodeURIComponent(incomingName);
+            fetch(apiUrl)
+              .then(res => res.json())
+              .then(data => {
+                if (!data.success) {
+                  alert("Nama tidak ditemukan di database.");
+                  document.body.innerHTML = "<h2 style='text-align:center;color:red;'>Unauthorized Access</h2>";
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert("Gagal menghubungkan ke server.");
+              });
+          }
+        }
+        
+        // --- VALIDASI CHECKLIST PERTAMA (Disclaimer) ---
+        checkbox.addEventListener('change', function () {
+          nextButton.disabled = !this.checked;
+          checkboxWrapper.classList.remove('error');
+        });
+        
+        nextButton.addEventListener('click', function (e) {
+            e.preventDefault();
+
+          if (!checkbox.checked) {
+            checkboxWrapper.classList.remove('error');
+            void checkboxWrapper.offsetWidth;
+            checkboxWrapper.classList.add('error');
+            setTimeout(() => checkboxWrapper.classList.remove('error'), 500);
+          } else {
+            document.getElementById('confirmationPage').style.display = 'none';
+            document.getElementById('formContainer').style.display = 'block';
+          }
+        });
+        
+        // --- VALIDASI CHECKLIST FORM PLAYER INFO ---
+        finalCheckbox.addEventListener('change', function () {
+          submitFinalButton.disabled = !this.checked;
+          finalCheckboxWrapper.classList.remove('error');
+        });
+        
+        submitFinalButton.addEventListener('click', function (e) {
+            e.preventDefault(); // <- tambahkan ini agar tidak trigger form submit
+
+            if (!finalCheckbox.checked) {
+                finalCheckboxWrapper.classList.remove('error');
+                void finalCheckboxWrapper.offsetWidth;
+                finalCheckboxWrapper.classList.add('error');
+                setTimeout(() => {
+                    finalCheckboxWrapper.classList.remove('error');
+                }, 500);
+            } else {
+                document.getElementById('registrationForm').style.display = 'none';
+                document.getElementById('paymentPage').style.display = 'block';
+            }
+        });
+        
+        // --- EVENT UNTUK BUTTON RSVP ---
+        document.getElementById('showIntro').addEventListener('click', function () {
+          document.getElementById('openingPage').style.display = 'none';
+          document.getElementById('confirmationPage').style.display = 'block';
+        });
+        
+        // --- LOGIKA TAMPILKAN SIZE KAOS JIKA OPSI 2/4 DIPILIH ---
+        const paymentRadios = document.querySelectorAll('input[name="payment"]');
+        const sizeGroup = document.getElementById('sizeGroup');
+        const sizeSelect = document.getElementById('size');
+        
+        paymentRadios.forEach(radio => {
+          radio.addEventListener('change', function () {
+            if (this.value === '2' || this.value === '4') {
+              sizeGroup.style.display = 'block';
+              sizeSelect.setAttribute('required', 'true');
+            } else {
+              sizeGroup.style.display = 'none';
+              sizeSelect.removeAttribute('required');
+            }
+          });
+        });
+        
+        // --- SUBMIT FORM KE GOOGLE SHEET ---
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+        
+          const selectedPayment = document.querySelector('input[name="payment"]:checked');
+          if (!selectedPayment) {
+            alert('Silakan pilih salah satu opsi pembayaran.');
+            return;
+          }
+        
+          if ((selectedPayment.value === '2' || selectedPayment.value === '4') && !sizeSelect.value) {
+            alert('Silakan pilih ukuran kaos.');
+            return;
+          }
+        
+          loadingScreen.style.display = 'flex';
+        
+            const formData = new FormData();
+            formData.append("buktiBayar", file); // hanya file
+            
+            const query = new URLSearchParams({
+            nama: namaInput.value,
+            tanggalLahir: tanggalLahirInput.value,
+            domisili: domisiliInput.value,
+            alergi: alergiInput.value,
+            payment: paymentOption.value,
+            size: sizeSelect.value
+            });
+
+            fetch(`${scriptURL}?${query.toString()}`, {
+            method: "POST",
+            body: formData
+            })
+            .then(response => {
+              if (!response.ok) throw new Error("Gagal");
+              document.getElementById('paymentPage').style.display = 'none';
+              document.getElementById('confirmationContainer').style.display = 'block';
+              loadingScreen.style.display = 'none';
+            })
+            .catch(error => {
+              alert('Gagal mengirim data: ' + error.message);
+              loadingScreen.style.display = 'none';
+            });
+        });
+
+        //Section Bukti Bayar
+        paymentForm?.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const payment = document.querySelector('input[name="payment"]:checked');
+            const size = document.getElementById('size');
+            const buktiBayar = document.getElementById('buktiBayar');
+            const loading = document.getElementById('loadingScreen');
+
+            if (!payment) return alert('Silakan pilih paket pembayaran.');
+            if ((payment.value === '2' || payment.value === '4') && !size.value) return alert('Silakan pilih ukuran kaos.');
+            if (!buktiBayar.files.length) return alert('Silakan upload bukti pembayaran.');
+
+            const file = buktiBayar.files[0];
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!allowedTypes.includes(file.type)) return alert('Format file tidak didukung. Hanya JPG, JPEG, PNG.');
+            if (file.size > 3 * 1024 * 1024) return alert('Ukuran file terlalu besar. Maksimal 3 MB.');
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                const base64 = reader.result.split(',')[1];
+
+                const payload = {
+                    nama: document.getElementById('nama').value,
+                    tanggalLahir: document.getElementById('tanggalLahir').value,
+                    domisili: document.getElementById('domisili').value,
+                    alergi: document.getElementById('alergi').value,
+                    payment: payment.value,
+                    size: size.value || '',
+                    buktiBayar: base64,
+                    mimeType: file.type,
+                    filename: file.name
+                };
+
+                if (loading) loading.style.display = 'flex';
+
+                fetch(scriptRSVP, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (loading) loading.style.display = 'none';
+                    if (result.status !== "success") throw new Error(result.message || "Unknown error");
+
+                    document.getElementById('paymentPage').style.display = 'none';
+                    document.getElementById('confirmationContainer').style.display = 'block';
+                })
+                .catch(err => {
+                    if (loading) loading.style.display = 'none';
+                    alert("Gagal mengirim data: " + err.message);
+                });
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script> -->
+        
+<!-- 
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwW7oPYpO-sNMFChomHT2MiuQHADozBl5uj5JOee6KI2tsMeBbUPkDb14EXSLIp-Tikvg/exec';
+        const validationURL = 'https://script.google.com/macros/s/AKfycbwW7oPYpO-sNMFChomHT2MiuQHADozBl5uj5JOee6KI2tsMeBbUPkDb14EXSLIp-Tikvg/exec'; // Ganti dengan URL validasi nama
+        
+        const form = document.getElementById('registrationForm');
+        const checkbox = document.getElementById('agreementCheckbox');
+        const checkboxWrapper = document.getElementById('checkboxWrapper');
+        const nextButton = document.getElementById('nextButton');
+        const finalCheckbox = document.getElementById('finalAgreement');
+        const finalCheckboxWrapper = document.getElementById('finalCheckboxWrapper');
+        const submitFinalButton = document.getElementById('submitFinalButton');
+        
+        // --- Prefill Nama dari URL dan Validasi Nama ---
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const incomingName = urlParams.get("name");
+        const welcome = document.querySelector("#openingPage h1");
+        const nameInput = document.getElementById('nama');
+        const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+
+        if (!incomingName) {
+        alert("Link tidak valid. Nama tidak tersedia.");
+        document.body.innerHTML = "<h2 style='text-align:center;color:red;'>Unauthorized Access</h2>";
+        } else {
+        if (welcome) {
+            welcome.innerHTML = `<b>WELCOME, ${incomingName.toUpperCase()}</b>`;
+        }
+
+        if (nameInput) {
+            nameInput.value = incomingName;
+            nameInput.readOnly = true;
+        }
+
+        if (!isLocal) {
+            const apiUrl = validationURL + "?name=" + encodeURIComponent(incomingName);
+            fetch(apiUrl)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                alert("Nama tidak ditemukan di database.");
+                document.body.innerHTML = "<h2 style='text-align:center;color:red;'>Unauthorized Access</h2>";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Gagal menghubungkan ke server.");
+            });
+        }
+        }
+        
+        // --- Event submit form ke spreadsheet ---
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+        
+            const formData = new FormData(form);
+        
+            document.getElementById('loadingScreen').style.display = 'flex';
+
+            formData.append("payment", document.querySelector('input[name="payment"]:checked')?.value || '');
+            formData.append("size", document.getElementById("size")?.value || '');
+
+        
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Gagal");
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('confirmationContainer').style.display = 'block';
+                document.getElementById('loadingScreen').style.display = 'none';
+            })
+            .catch(error => {
+                alert('Gagal mengirim data: ' + error.message);
+            });
+        });
+        
+        // --- Event Validasi Checklist Disclaimer Pertama (Sebelum Form) ---
+        
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                nextButton.disabled = false;
+                checkboxWrapper.classList.remove('error');
+            } else {
+                nextButton.disabled = true;
+            }
+        });
+        
+        nextButton.addEventListener('click', function () {
+            if (!checkbox.checked) {
+                checkboxWrapper.classList.remove('error');
+                void checkboxWrapper.offsetWidth; // force reflow supaya animasi berulang
+                checkboxWrapper.classList.add('error');
+        
+                setTimeout(() => {
+                    checkboxWrapper.classList.remove('error');
+                }, 500);
+            } else {
+                document.getElementById('confirmationPage').style.display = 'none';
+                document.getElementById('formContainer').style.display = 'block';
+            }
+        });
+        
+        // --- Event Tombol "RSVP Now" di Opening Page ---
+        
+        document.getElementById('showIntro').addEventListener('click', function() {
+            document.getElementById('openingPage').style.display = 'none';
+            document.getElementById('confirmationPage').style.display = 'block';
+        });
+        
+        // --- Event Validasi Checklist Akhir sebelum Apply Form ---
+        
+        finalCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                submitFinalButton.disabled = false;
+                finalCheckboxWrapper.classList.remove('error');
+            } else {
+                submitFinalButton.disabled = true;
+            }
+        });
+        
+        // Show paymentPage if final agreement is checked
+        submitFinalButton.addEventListener('click', function (e) {
+            if (!finalCheckbox.checked) {
+                e.preventDefault();
+                finalCheckboxWrapper.classList.remove('error');
+                void finalCheckboxWrapper.offsetWidth;
+                finalCheckboxWrapper.classList.add('error');
+
+                setTimeout(() => {
+                    finalCheckboxWrapper.classList.remove('error');
+                }, 500);
+            } else {
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('paymentPage').style.display = 'block';
+            }
+        });
+
+        // Toggle size selector based on payment choice
+        const paymentRadios = document.querySelectorAll('input[name="payment"]');
+        const sizeGroup = document.getElementById('sizeGroup');
+
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                if (this.value === '2' || this.value === '4') {
+                    sizeGroup.style.display = 'block';
+                    document.getElementById('size').setAttribute('required', 'true');
+                } else {
+                    sizeGroup.style.display = 'none';
+                    document.getElementById('size').removeAttribute('required');
+                }
+            });
+        });
+
+    </script> -->
+        
+
+    <!-- <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwW7oPYpO-sNMFChomHT2MiuQHADozBl5uj5JOee6KI2tsMeBbUPkDb14EXSLIp-Tikvg/exec';
+        const form = document.getElementById('registrationForm');
+    
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            document.getElementById('loadingScreen').style.display = 'flex';
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Gagal");
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('confirmationContainer').style.display = 'block';
+                document.getElementById('loadingScreen').style.display = 'none';
+            })
+            .catch(error => {
+                alert('Gagal mengirim data: ' + error.message);
+            });
+        });
+
+        const checkbox = document.getElementById('agreementCheckbox');
+        const checkboxWrapper = document.getElementById('checkboxWrapper');
+        const nextButton = document.getElementById('nextButton');
+
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                nextButton.disabled = false;
+                checkboxWrapper.classList.remove('error');
+            } else {
+                nextButton.disabled = true;
+            }
+        });
+
+        nextButton.addEventListener('click', function () {
+            if (!checkbox.checked) {
+                checkboxWrapper.classList.remove('error');
+                void checkboxWrapper.offsetWidth; // force reflow
+                checkboxWrapper.classList.add('error');
+
+                setTimeout(() => {
+                    checkboxWrapper.classList.remove('error');
+                }, 500);
+            } else {
+                document.getElementById('confirmationPage').style.display = 'none';
+                document.getElementById('formContainer').style.display = 'block';
+            }
+        });
+
+        document.getElementById('showIntro').addEventListener('click', function() {
+        document.getElementById('openingPage').style.display = 'none';
+        document.getElementById('confirmationPage').style.display = 'block';
+        });
+    </script>     -->
+</body>
+</html>
